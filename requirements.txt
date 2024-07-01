@@ -1,0 +1,4 @@
+aiogram
+envyaml
+meshtastic
+pip
