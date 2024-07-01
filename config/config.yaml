@@ -1,0 +1,22 @@
+# please use https://direnv.net/ or similar to manage the environment variables
+
+logging:
+  level: 'INFO' # 'DEBUG' is pretty noisy but has all the details
+
+telegram:
+  bot_token: "${TELEGRAM_BOT_TOKEN}" # https://core.telegram.org/bots/tutorial
+  chat_id: "${TELEGRAM_CHAT_ID}"
+
+meshtastic:
+  connection_type: serial # or 'tcp'
+  device: "${MESHTASTIC_DEVICE}" # for serial connection
+  # host: "${MESHTASTIC_HOST}" # for tcp connection
+  # port: "${MESHTASTIC_PORT}" # for tcp connection
+  default_node_id: "${MESHTASTIC_DEFAULT_NODE_ID}" # default node id to bridge to
+  rate_limit: 10 # messages per minute from meshtastic side
+
+bridge:
+  status_interval: 86400 # status update interval in seconds (default: daily)
+
+syslog:
+  host: "${SYSLOG_HOST}"
