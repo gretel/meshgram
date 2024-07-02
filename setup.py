@@ -4,14 +4,14 @@ with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
 setup(
-    name="meshtastic-telegram-bridge",
+    name="meshgram",
     version="0.1.0",
     author="Tom Hensel",
     author_email="robot@jitter.eu",
     description="A bridge between Meshtastic and Telegram for message and location sharing",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/yourusername/meshtastic-telegram-bridge",
+    url="https://github.com/gretel/meshgram",
     packages=find_packages(where="src"),
     package_dir={"": "src"},
     classifiers=[
@@ -30,7 +30,7 @@ setup(
     ],
     entry_points={
         "console_scripts": [
-            "meshtastic-telegram-bridge=meshtastic_telegram_bridge:main",
+            "meshgram=meshtastic_telegram_bridge:main",
         ],
     },
 )

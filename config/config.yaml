@@ -1,22 +1,28 @@
+---
+# config/config.yaml
+#
 # please use https://direnv.net/ or similar to manage the environment variables
-
-logging:
-  level: 'INFO' # 'DEBUG' is pretty noisy but has all the details
 
 telegram:
   bot_token: "${TELEGRAM_BOT_TOKEN}" # https://core.telegram.org/bots/tutorial
   chat_id: "${TELEGRAM_CHAT_ID}"
+  authorized_users:
+    - 19971683
 
 meshtastic:
-  connection_type: serial # or 'tcp'
+  connection_type: 'serial'  # 'serial' or 'tcp'
   device: "${MESHTASTIC_DEVICE}" # for serial connection
-  # host: "${MESHTASTIC_HOST}" # for tcp connection
-  # port: "${MESHTASTIC_PORT}" # for tcp connection
-  default_node_id: "${MESHTASTIC_DEFAULT_NODE_ID}" # default node id to bridge to
-  rate_limit: 10 # messages per minute from meshtastic side
+  # default_node_id: '!4e19d9a4'
+  default_node_id: '!4e1a832c'  # Default group chat ID (0xFFFFFFFF)
+  heartbeat_timeout: 300  # Timeout in seconds for node heartbeats
+  local_nodes:
+    - '!4e1a832c'
+    - '!4e19d9a4'
+    - '!e72e9724'
 
-bridge:
-  status_interval: 86400 # status update interval in seconds (default: daily)
-
-syslog:
-  host: "${SYSLOG_HOST}"
+logging:
+  level: 'info'
+  use_syslog: false
+  syslog_host: "${SYSLOG_HOST}"
+  syslog_port: 514
+  syslog_protocol: 'udp'  # 'udp' or 'tcp'

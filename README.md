@@ -1,28 +1,27 @@
----
-# `meshgram`
+# 🌐 Meshgram: Bridging Meshtastic and Telegram 🚀
 
-**Work in progress!**
+Connect your Meshtastic mesh network with Telegram group chats! 📡💬
 
-Meshgram bridges Meshtastic nodes and Telegram group chats, enabling the exchange of messages and locations between these platforms.
+## 🌟 Features
 
-## Features
-- Supports serial and TCP connections
-- Automatic reconnection
-- Rate limiting
-- Regular updates
-- Read receipts
-- Optional syslog logging
+- 🔌 Supports serial and TCP connections
+- 🔄 Automatic reconnection
+- 🚦 Rate limiting
+- 🔔 Regular updates
+- ✅ Read receipts
+- 📝 Optional syslog logging
 
-## Requirements
-- Python 3.11+
-- Dependencies
-	- `aiogram`
-	- `envyaml`
-	- `meshtastic`
+## 🛠 Requirements
 
-## Installation
+- Python 3.11+ 🐍
+- Dependencies:
+  - `envyaml` 📄
+  - `meshtastic` 📡
+  - `python-telegram-bot` 🤖
 
-1. **Clone the repository:**
+## 🚀 Quick Start
+
+1. **Clone the repo:**
    ```bash
    git clone https://github.com/gretel/meshgram.git
    cd meshgram
@@ -40,23 +39,34 @@ Meshgram bridges Meshtastic nodes and Telegram group chats, enabling the exchang
    ```
 
 4. **Configure the project:**
-   - Edit `config.yaml` with your settings:
-     ```yaml
-     meshtastic:
-       connection_type: serial  # or 'tcp'
-       default_node_id: !ffffff # replace with your default node id to bridge to
-     telegram:
-       token: <telegram bot token>
-       chat_id: <telegram chat ID>
-     ```
+   Create a `config.yaml` file in the `config` directory:
+   ```yaml
+   telegram:
+     bot_token: "your_bot_token_here"
+     chat_id: -1001234567890
+     authorized_users:
+       - 123456789
 
-## Usage
+   meshtastic:
+     connection_type: "serial"
+     device: "/dev/ttyUSB0"
+     default_node_id: "!abcdef12"
 
-To start the bridge, run:
-```bash
-python src/meshtastic_telegram_bridge.py
-```
+   logging:
+     level: "info"
+   ```
 
-## Contributing
+5. **Run Meshgram:**
+   ```bash
+   python src/meshgram.py
+   ```
 
-Contributions are welcome! Please open an issue or submit a pull request.
+## 🤝 Contributing
+
+We love contributions! 💖 Please open an issue or submit a pull request.
+
+## 📜 License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+
+Happy meshing! 🎉

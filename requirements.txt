@@ -1,4 +1,4 @@
-aiogram
 envyaml
 meshtastic
 pip
+python-telegram-bot
