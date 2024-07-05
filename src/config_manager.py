@@ -23,11 +23,10 @@ class ConfigManager:
 
     def setup_logging(self) -> None:
         log_level = self._parse_log_level(self.get('logging.level', 'INFO'))
-        formatter = SensitiveFormatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+        formatter = SensitiveFormatter('%(asctime)s %(levelname)s [%(name)s] %(message)s',)
         
         logging.basicConfig(
             level=log_level,
-            format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
             handlers=[
                 logging.StreamHandler(),
                 logging.FileHandler('meshgram.log')
