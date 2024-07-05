@@ -1,15 +1,15 @@
 import logging
 import re
-from typing import Any, Optional, List
+from typing import Any, Optional, List, Dict
 from envyaml import EnvYAML
 
 class ConfigManager:
     def __init__(self, config_path: str = 'config/config.yaml'):
         try:
-            self.config = EnvYAML(config_path)
+            self.config: Dict[str, Any] = EnvYAML(config_path)
         except Exception as e:
             raise ValueError(f"Failed to load configuration from {config_path}: {e}")
-        self.setup_logging()
+        self._setup_logging()
 
     def get(self, key: str, default: Optional[Any] = None) -> Any:
         value = self.config.get(key, default)
@@ -21,20 +21,24 @@ class ConfigManager:
         users = self.get('telegram.authorized_users', [])
         return [int(user) for user in users if str(user).isdigit()]
 
-    def setup_logging(self) -> None:
+    def _setup_logging(self) -> None:
         log_level = self._parse_log_level(self.get('logging.level', 'INFO'))
-        formatter = SensitiveFormatter('%(asctime)s %(levelname)s [%(name)s] %(message)s',)
+        log_level_telegram = self._parse_log_level(self.get('logging.level_telegram', 'INFO'))
+        log_level_httpx = self._parse_log_level(self.get('logging.level_telegram', 'WARN'))
+
+        formatter = SensitiveFormatter('%(asctime)s %(levelname)s %(name)s - %(message)s')
         
-        logging.basicConfig(
-            level=log_level,
-            handlers=[
-                logging.StreamHandler(),
-                logging.FileHandler('meshgram.log')
-            ]
-        )
+        handlers = [logging.StreamHandler()]
+        if self.get('logging.file_log', False):
+            handlers.append(logging.FileHandler(self.get('logging.file_path', 'meshgram.log')))
         
-        for handler in logging.getLogger().handlers:
+        logging.basicConfig(level=log_level, handlers=handlers, format='%(asctime)s %(levelname)s %(name)s - %(message)s')
+        
+        for handler in logging.root.handlers:
             handler.setFormatter(formatter)
+
+        logging.getLogger('httpx').setLevel(log_level_httpx)
+        logging.getLogger('telegram').setLevel(log_level_telegram)
 
         if self.get('logging.use_syslog', False):
             self._setup_syslog_handler()
@@ -54,9 +58,10 @@ class ConfigManager:
 
     def _setup_syslog_handler(self) -> None:
         try:
-            syslog_handler = logging.handlers.SysLogHandler(
+            from logging.handlers import SysLogHandler
+            syslog_handler = SysLogHandler(
                 address=(self.get('logging.syslog_host'), self.get('logging.syslog_port', 514)),
-                socktype=logging.handlers.socket.SOCK_DGRAM if self.get('logging.syslog_protocol', 'udp') == 'udp' else logging.handlers.socket.SOCK_STREAM
+                socktype=SysLogHandler.UDP_SOCKET if self.get('logging.syslog_protocol', 'udp').lower() == 'udp' else SysLogHandler.TCP_SOCKET
             )
             syslog_handler.setFormatter(SensitiveFormatter('%(name)s - %(levelname)s - %(message)s'))
             logging.getLogger().addHandler(syslog_handler)
@@ -70,16 +75,15 @@ class ConfigManager:
             'meshtastic.connection_type',
             'meshtastic.device',
         ]
-        for key in required_keys:
-            if not self.get(key):
-                raise ValueError(f"Missing required configuration: {key}")
+        missing_keys = [key for key in required_keys if not self.get(key)]
+        if missing_keys:
+            raise ValueError(f"Missing required configuration: {', '.join(missing_keys)}")
 
 class SensitiveFormatter(logging.Formatter):
     def __init__(self, fmt: Optional[str] = None, datefmt: Optional[str] = None):
         super().__init__(fmt, datefmt)
         self.sensitive_patterns = [
-            (re.compile(r'(bot\d+):(AAH[\w-]{34})'), r'\1:[REDACTED]'),
-            (re.compile(r'(token=)([A-Za-z0-9-_]{35,})'), r'\1[REDACTED]'),
+            (re.compile(r'(https://api\.telegram\.org/bot)([A-Za-z0-9:_-]{35,})(/\w+)'), r'\1[redacted]\3')
         ]
 
     def format(self, record: logging.LogRecord) -> str:

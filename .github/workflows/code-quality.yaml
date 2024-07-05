@@ -19,15 +19,13 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install -q -U pip
-        pip install -q -U flake8 pytest
-        if [ -f requirements.txt ]; then pip install -q -U -r requirements.txt; fi
-    - name: Lint with flake8
-      continue-on-error: true
+        pip install -q -U -r requirements.txt
+        pip install -q -U pytest pytest-asyncio coverage 'prospector[with_everything]'
+
+    - name: Run tests with coverage
       run: |
-        # stop the build if there are Python syntax errors or undefined names
-        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-        # exit-zero treats all errors as warnings
-        flake8 . --count --exit-zero --max-complexity=10 --max-line-length=120 --statistics
-    - name: Test with pytest
-      run: |
-        pytest
+        coverage run -m pytest
+        coverage report -m
+
+    - name: Run Prospector
+      run: prospector

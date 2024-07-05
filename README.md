@@ -4,20 +4,23 @@ Connect your Meshtastic mesh network with Telegram group chats! 📡💬
 
 ## 🌟 Features
 
-- 🔌 Supports serial and TCP connections
-- 🔄 Automatic reconnection
-- 🚦 Rate limiting
-- 🔔 Regular updates
-- ✅ Read receipts
-- 📝 Optional syslog logging
+- 🔌 Supports both serial and TCP connections to Meshtastic devices
+- 🔄 Automatic reconnection to Meshtastic device
+- 🚦 Message queuing and retry mechanism
+- 🔔 Command to send bell notifications to Meshtastic nodes
+- 📊 Real-time status updates for nodes (telemetry, position, routing, neighbors)
+- 🗺️ Location sharing between Telegram and Meshtastic
+- 🔐 User authorization for Telegram commands
+- 📝 Optional logging to file and syslog
 
 ## 🛠 Requirements
 
-- Python 3.11+ 🐍
+- Python 3.12+ 🐍
 - Dependencies:
-  - `envyaml` 📄
-  - `meshtastic` 📡
-  - `python-telegram-bot` 🤖
+  - `envyaml`: For YAML configuration file parsing with environment variable support
+  - `meshtastic`: Python API for Meshtastic devices
+  - `python-telegram-bot`: Telegram Bot API wrapper
+  - `pubsub`: For publish-subscribe messaging pattern
 
 ## 🚀 Quick Start
 
@@ -35,7 +38,7 @@ Connect your Meshtastic mesh network with Telegram group chats! 📡💬
 
 3. **Install dependencies:**
    ```bash
-   pip install -U -r requirements.txt
+   pip install -r requirements.txt
    ```
 
 4. **Configure the project:**
@@ -48,12 +51,21 @@ Connect your Meshtastic mesh network with Telegram group chats! 📡💬
        - 123456789
 
    meshtastic:
-     connection_type: "serial"
-     device: "/dev/ttyUSB0"
+     connection_type: "serial"  # or "tcp"
+     device: "/dev/ttyUSB0"  # or "hostname:port" for TCP
      default_node_id: "!abcdef12"
+     local_nodes:
+       - "!abcdef12"
+       - "!12345678"
 
    logging:
      level: "info"
+     level_telegram: "warn"
+     level_httpx: "warn"
+     use_syslog: false
+     syslog_host: "localhost"
+     syslog_port: 514
+     syslog_protocol: "udp"
    ```
 
 5. **Run Meshgram:**
@@ -61,12 +73,17 @@ Connect your Meshtastic mesh network with Telegram group chats! 📡💬
    python src/meshgram.py
    ```
 
+## 📡 Telegram Commands
+
+- `/start` - Start the bot and see available commands
+- `/help` - Show help message
+- `/status` - Check the current status of Meshgram and Meshtastic
+- `/bell [node_id]` - Send a bell notification to a Meshtastic node
+- `/node [node_id]` - Get information about a specific node
+- `/user` - Get information about your Telegram user
+
 ## 🤝 Contributing
 
-We love contributions! 💖 Please open an issue or submit a pull request.
-
-## 📜 License
-
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+We welcome contributions! 💖 Please open an issue or submit a pull request if you have any improvements or bug fixes.
 
 Happy meshing! 🎉

@@ -21,6 +21,8 @@ meshtastic:
 
 logging:
   level: 'info'
+  level_telegram: 'warn'
+  level_httpx: 'warn'
   use_syslog: false
   syslog_host: "${SYSLOG_HOST}"
   syslog_port: 514

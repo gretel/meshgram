@@ -1,0 +1,13 @@
+strictness: medium
+test-warnings: false
+doc-warnings: false
+
+ignore-paths:
+  - config
+
+pylint:
+  disable:
+    - logging-fstring-interpolation
+
+pylint:
+  run: false
