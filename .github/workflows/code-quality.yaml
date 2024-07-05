@@ -18,9 +18,9 @@ jobs:
         check-latest: true
     - name: Install dependencies
       run: |
-        python -m pip install --upgrade pip
-        pip install flake8 pytest
-        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+        python -m pip install -q -U pip
+        pip install -q -U flake8 pytest
+        if [ -f requirements.txt ]; then pip install -q -U -r requirements.txt; fi
     - name: Lint with flake8
       continue-on-error: true
       run: |
