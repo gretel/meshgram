@@ -12,9 +12,8 @@ telegram:
 meshtastic:
   connection_type: 'serial'  # 'serial' or 'tcp'
   device: "${MESHTASTIC_DEVICE}" # for serial connection
-  # default_node_id: '!4e19d9a4'
-  default_node_id: '!4e1a832c'  # Default group chat ID (0xFFFFFFFF)
-  heartbeat_timeout: 300  # Timeout in seconds for node heartbeats
+  default_node_id: '!4e1a832c'
+  heartbeat_timeout: 300 # timeout in seconds for node heartbeats
   local_nodes:
     - '!4e1a832c'
     - '!4e19d9a4'
